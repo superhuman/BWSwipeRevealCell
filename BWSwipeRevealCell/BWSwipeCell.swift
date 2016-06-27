@@ -73,7 +73,7 @@ public class BWSwipeCell:UITableViewCell {
     // BWSwipeCell Delegate
     public weak var delegate: BWSwipeCellDelegate?
     
-    private lazy var releaseCompletionBlock:((Bool) -> Void)? = {
+    public lazy var releaseAnimationCleanupBlock:((Bool) -> Void)? = {
         return {
             [weak self] (finished: Bool) in
             
@@ -83,6 +83,28 @@ public class BWSwipeCell:UITableViewCell {
             this.cleanUp()
         }
     }()
+    
+    public lazy var handleAnimateCellSpringRelease: () -> () = { [weak self] in
+        guard let this = self else { return }
+        this.contentView.frame = this.contentView.bounds
+    }
+
+    public lazy var handleAnimateCellSlidingDoor: () -> () = { [weak self] in
+        guard let this = self else { return }
+        
+        let pointX = this.contentView.frame.origin.x
+        if pointX > 0 {
+            this.contentView.frame.origin.x = this.threshold
+        } else if pointX < 0 {
+            this.contentView.frame.origin.x = -this.threshold
+        }
+    }
+
+    public lazy var handleAnimateCellSwipeThrough: () -> () = { [weak self] in
+        guard let this = self else { return }
+        let direction:CGFloat = (this.contentView.frame.origin.x > 0) ? 1 : -1
+        this.contentView.frame.origin.x = direction * (this.contentView.bounds.width + this.threshold)
+    }
     
     // MARK: - Swipe Cell Functions
     
@@ -179,39 +201,33 @@ public class BWSwipeCell:UITableViewCell {
     
     // MARK: - Reset animations
     
-    func animateCellSpringRelease() {
+    public func animateCellSpringRelease() {
         UIView.animateWithDuration(self.animationDuration,
             delay: 0,
             options: .CurveEaseOut,
             animations: {
-                self.contentView.frame = self.contentView.bounds
+                self.handleAnimateCellSpringRelease()
             },
-            completion: self.releaseCompletionBlock)
+            completion: self.releaseAnimationCleanupBlock)
     }
     
-    func animateCellSlidingDoor() {
+    public func animateCellSlidingDoor() {
         UIView.animateWithDuration(self.animationDuration,
             delay: 0,
             options: .AllowUserInteraction,
             animations: {
-                let pointX = self.contentView.frame.origin.x
-                if pointX > 0 {
-                    self.contentView.frame.origin.x = self.threshold
-                } else if pointX < 0 {
-                    self.contentView.frame.origin.x = -self.threshold
-                }
+                self.handleAnimateCellSlidingDoor()
             },
-            completion: self.releaseCompletionBlock)
+            completion: self.releaseAnimationCleanupBlock)
     }
     
-    func animateCellSwipeThrough() {
+    public func animateCellSwipeThrough() {
         UIView.animateWithDuration(self.animationDuration,
             delay: 0,
             options: UIViewAnimationOptions.CurveLinear,
             animations: {
-                let direction:CGFloat = (self.contentView.frame.origin.x > 0) ? 1 : -1
-                self.contentView.frame.origin.x = direction * (self.contentView.bounds.width + self.threshold)
-            }, completion: self.releaseCompletionBlock)
+                self.handleAnimateCellSwipeThrough()
+            }, completion: self.releaseAnimationCleanupBlock)
     }
     
     // MARK: - UITableViewCell Overrides

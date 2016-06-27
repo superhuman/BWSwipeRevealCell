@@ -130,37 +130,38 @@ public class BWSwipeRevealCell: BWSwipeCell {
     
     // MARK: - Reveal Cell Animations
     
-    override func animateCellSpringRelease() {
-        super.animateCellSpringRelease()
+    override public func animateCellSpringRelease() {
         let pointX = self.contentView.frame.origin.x
         UIView.animateWithDuration(self.animationDuration,
             delay: 0,
             options: .CurveLinear,
             animations: {
+                super.handleAnimateCellSpringRelease()
                 if pointX > 0 {
                     self.leftBackButton!.frame.origin.x = -self.threshold
                 } else if pointX < 0 {
                     self.rightBackButton!.frame.origin.x = CGRectGetMaxX(self.frame)
                 }
-            }, completion: nil)
+            }, completion: super.releaseAnimationCleanupBlock)
     }
     
-    override func animateCellSwipeThrough() {
-        super.animateCellSwipeThrough()
+    override public func animateCellSwipeThrough() {
         let pointX = self.contentView.frame.origin.x
         UIView.animateWithDuration(self.animationDuration,
             delay: 0,
             options: .CurveLinear,
             animations: {
+                super.animateCellSwipeThrough()
+                
                 if pointX > 0 {
                     self.leftBackButton!.frame.origin.x = CGRectGetMaxX(self.frame)
                 } else if pointX < 0 {
                     self.rightBackButton!.frame.origin.x = -self.threshold
                 }
-            }, completion: nil)
+            }, completion: super.releaseAnimationCleanupBlock)
     }
     
-    override func animateCellSlidingDoor() {
+    override public func animateCellSlidingDoor() {
         super.animateCellSlidingDoor()
         self.shouldCleanUpBackView = false
     }

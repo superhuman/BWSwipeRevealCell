@@ -16,7 +16,7 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "insertNewObject:")
+        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(MasterViewController.insertNewObject(_:)))
         self.navigationItem.rightBarButtonItem = addButton
     }
     
