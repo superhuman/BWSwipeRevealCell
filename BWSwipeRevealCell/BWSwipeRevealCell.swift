@@ -142,7 +142,9 @@ public class BWSwipeRevealCell: BWSwipeCell {
                 } else if pointX < 0 {
                     self.rightBackButton!.frame.origin.x = CGRectGetMaxX(self.frame)
                 }
-            }, completion: super.releaseAnimationCleanupBlock)
+            }, completion: { finished in
+                super.handleReleaseAnimationCleanup()
+            })
     }
     
     override public func animateCellSwipeThrough() {
@@ -158,7 +160,9 @@ public class BWSwipeRevealCell: BWSwipeCell {
                 } else if pointX < 0 {
                     self.rightBackButton!.frame.origin.x = -self.threshold
                 }
-            }, completion: super.releaseAnimationCleanupBlock)
+            }, completion: { finished in
+                super.handleReleaseAnimationCleanup()
+            })
     }
     
     override public func animateCellSlidingDoor() {

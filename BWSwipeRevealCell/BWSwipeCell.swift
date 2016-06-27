@@ -73,16 +73,12 @@ public class BWSwipeCell:UITableViewCell {
     // BWSwipeCell Delegate
     public weak var delegate: BWSwipeCellDelegate?
     
-    public lazy var releaseAnimationCleanupBlock:((Bool) -> Void)? = {
-        return {
-            [weak self] (finished: Bool) in
-            
-            guard let this = self else { return }
-            
-            this.delegate?.swipeCellDidCompleteRelease?(this)
-            this.cleanUp()
-        }
-    }()
+    public lazy var handleReleaseAnimationCleanup: () -> () = { [weak self] in
+        guard let this = self else { return }
+        
+        this.delegate?.swipeCellDidCompleteRelease?(this)
+        this.cleanUp()
+    }
     
     public lazy var handleAnimateCellSpringRelease: () -> () = { [weak self] in
         guard let this = self else { return }
@@ -207,8 +203,9 @@ public class BWSwipeCell:UITableViewCell {
             options: .CurveEaseOut,
             animations: {
                 self.handleAnimateCellSpringRelease()
-            },
-            completion: self.releaseAnimationCleanupBlock)
+            }, completion: { finished in
+                self.handleReleaseAnimationCleanup()
+            })
     }
     
     public func animateCellSlidingDoor() {
@@ -218,7 +215,9 @@ public class BWSwipeCell:UITableViewCell {
             animations: {
                 self.handleAnimateCellSlidingDoor()
             },
-            completion: self.releaseAnimationCleanupBlock)
+            completion: { finished in
+                self.handleReleaseAnimationCleanup()
+            })
     }
     
     public func animateCellSwipeThrough() {
@@ -227,7 +226,10 @@ public class BWSwipeCell:UITableViewCell {
             options: UIViewAnimationOptions.CurveLinear,
             animations: {
                 self.handleAnimateCellSwipeThrough()
-            }, completion: self.releaseAnimationCleanupBlock)
+            },
+            completion: { finished in
+                self.handleReleaseAnimationCleanup()
+            })
     }
     
     // MARK: - UITableViewCell Overrides
