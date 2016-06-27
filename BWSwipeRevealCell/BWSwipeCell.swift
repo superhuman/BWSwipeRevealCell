@@ -158,7 +158,7 @@ public class BWSwipeCell:UITableViewCell {
         }
     }
     
-    func didStartSwiping() {
+    public func didStartSwiping() {
         self.delegate?.swipeCellDidStartSwiping?(self)
     }
     

@@ -91,7 +91,7 @@ public class BWSwipeRevealCell: BWSwipeCell {
         }
     }
     
-    override func didStartSwiping() {
+    override public func didStartSwiping() {
         super.didStartSwiping()
         self.backgroundView!.addSubview(self.backView!)
     }
