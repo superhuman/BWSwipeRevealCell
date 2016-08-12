@@ -30,6 +30,7 @@ public enum BWSwipeCellState {
 }
 
 @objc public protocol BWSwipeCellDelegate: NSObjectProtocol {
+    optional func swipeCellShouldStartSwiping(cell: BWSwipeCell) -> Bool
     optional func swipeCellDidStartSwiping(cell: BWSwipeCell)
     optional func swipeCellDidSwipe(cell: BWSwipeCell)
     optional func swipeCellWillRelease(cell: BWSwipeCell)
@@ -141,8 +142,14 @@ public class BWSwipeCell:UITableViewCell {
         if panGestureRecognizer.state == .Began && panGestureRecognizer.numberOfTouches() > 0 {
             let newTranslation = CGPointMake(self.contentView.frame.origin.x, 0)
             panGestureRecognizer.setTranslation(newTranslation, inView: panGestureRecognizer.view)
-            self.didStartSwiping()
-            self.animateContentViewForPoint(newTranslation)
+            
+            if self.shouldStartSwiping() {
+                self.didStartSwiping()
+                self.animateContentViewForPoint(newTranslation)
+            } else {
+                panGestureRecognizer.enabled = false
+                panGestureRecognizer.enabled = true
+            }
         }
         else {
             if panGestureRecognizer.state == .Changed && panGestureRecognizer.numberOfTouches() > 0 {
@@ -152,6 +159,10 @@ public class BWSwipeCell:UITableViewCell {
                 self.resetCellPosition()
             }
         }
+    }
+    
+    public func shouldStartSwiping() -> Bool {        
+        return self.delegate?.swipeCellShouldStartSwiping?(self) ?? true
     }
     
     public func didStartSwiping() {
