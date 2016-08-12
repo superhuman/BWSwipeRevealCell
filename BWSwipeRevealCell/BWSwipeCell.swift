@@ -120,7 +120,7 @@ public class BWSwipeCell:UITableViewCell {
         self.state = .Normal
     }
     
-    func handlePanGesture(panGestureRecognizer: UIPanGestureRecognizer) {
+    public func handlePanGesture(panGestureRecognizer: UIPanGestureRecognizer) {
         let translation: CGPoint = panGestureRecognizer.translationInView(panGestureRecognizer.view)
         var panOffset: CGFloat = translation.x
         
@@ -234,26 +234,26 @@ public class BWSwipeCell:UITableViewCell {
     
     // MARK: - UITableViewCell Overrides
     
-    override public init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    public override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.initialize()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.initialize()
     }
     
-    override public func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         self.cleanUp()
     }
     
-    override public func setSelected(selected: Bool, animated: Bool) {
+    public override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
-    override public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+    public override func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer.isKindOfClass(UIPanGestureRecognizer) && self.revealDirection != .None {
             let pan:UIPanGestureRecognizer = gestureRecognizer as! UIPanGestureRecognizer
             let translation: CGPoint = pan.translationInView(self.superview)
