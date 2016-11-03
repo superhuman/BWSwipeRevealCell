@@ -104,9 +104,13 @@ class MasterViewController: UITableViewController, NSFetchedResultsControllerDel
             return _fetchedResultsController!
         }
         
+<<<<<<< HEAD
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Event")
+=======
         let fetchRequest:NSFetchRequest<NSManagedObject> = NSFetchRequest()
         let entity = NSEntityDescription.entity(forEntityName: "Event", in: self.managedObjectContext!)
         fetchRequest.entity = entity
+>>>>>>> upstream/master
         fetchRequest.fetchBatchSize = 20
         let sortDescriptor = NSSortDescriptor(key: "type", ascending: false)
         fetchRequest.sortDescriptors = [sortDescriptor]

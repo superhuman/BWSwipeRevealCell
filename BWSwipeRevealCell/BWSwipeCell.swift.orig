@@ -30,7 +30,10 @@ public enum BWSwipeCellState {
 }
 
 @objc public protocol BWSwipeCellDelegate: NSObjectProtocol {
+<<<<<<< HEAD
     @objc optional func swipeCellShouldStartSwiping(_ cell: BWSwipeCell) -> Bool
+=======
+>>>>>>> upstream/master
     @objc optional func swipeCellDidStartSwiping(_ cell: BWSwipeCell)
     @objc optional func swipeCellDidSwipe(_ cell: BWSwipeCell)
     @objc optional func swipeCellWillRelease(_ cell: BWSwipeCell)
@@ -74,7 +77,8 @@ open class BWSwipeCell:UITableViewCell {
     // BWSwipeCell Delegate
     open weak var delegate: BWSwipeCellDelegate?
     
-    open lazy var handleReleaseAnimationCleanup: () -> () = { [weak self] finished in
+<<<<<<< HEAD
+    open lazy var handleReleaseAnimationCleanup: () -> () = { [weak self] in
         guard let this = self else { return }
         
         this.delegate?.swipeCellDidCompleteRelease?(this)
@@ -94,6 +98,16 @@ open class BWSwipeCell:UITableViewCell {
             this.contentView.frame.origin.x = this.threshold
         } else if pointX < 0 {
             this.contentView.frame.origin.x = -this.threshold
+=======
+    open lazy var releaseCompletionBlock:((Bool) -> Void)? = {
+        return {
+            [weak self] (finished: Bool) in
+            
+            guard let this = self else { return }
+            
+            this.delegate?.swipeCellDidCompleteRelease?(this)
+            this.cleanUp()
+>>>>>>> upstream/master
         }
     }
 
@@ -142,6 +156,7 @@ open class BWSwipeCell:UITableViewCell {
         if panGestureRecognizer.state == .began && panGestureRecognizer.numberOfTouches > 0 {
             let newTranslation = CGPoint(x: self.contentView.frame.origin.x, y: 0)
             panGestureRecognizer.setTranslation(newTranslation, in: panGestureRecognizer.view)
+<<<<<<< HEAD
             
             if self.shouldStartSwiping() {
                 self.didStartSwiping()
@@ -150,6 +165,10 @@ open class BWSwipeCell:UITableViewCell {
                 panGestureRecognizer.isEnabled = false
                 panGestureRecognizer.isEnabled = true
             }
+=======
+            self.didStartSwiping()
+            self.animateContentViewForPoint(newTranslation)
+>>>>>>> upstream/master
         }
         else {
             if panGestureRecognizer.state == .changed && panGestureRecognizer.numberOfTouches > 0 {
@@ -161,10 +180,13 @@ open class BWSwipeCell:UITableViewCell {
         }
     }
     
+<<<<<<< HEAD
     open func shouldStartSwiping() -> Bool {        
         return self.delegate?.swipeCellShouldStartSwiping?(self) ?? true
     }
     
+=======
+>>>>>>> upstream/master
     open func didStartSwiping() {
         self.delegate?.swipeCellDidStartSwiping?(self)
     }
